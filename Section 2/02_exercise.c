@@ -2,80 +2,65 @@
 #include <math.h>
 #include <string.h>
 
-char value(int number)
+char digits[] = "0123456789ABCDEF";
+
+int convert_to_dec(char T[], int b)
 {
-    if (number >= 0 && number <= 9)
-        return (char)(number + '0');
-    else
-        return (char)(number - 10 + 'A');
+    int decimal = 0;
+    for (int i = 0; i < strlen(T); i++)
+        decimal += (strchr(digits, T[i]) - digits) * pow(b, strlen(T) - 1 - i);
+    return decimal;
 }
 
-void reverse(char *string)
+int narcisstic_number(char T[], int m)
 {
-    int len = strlen(string);
-    for (int i = 0; i < len / 2; i++)
-    {
-        char temporary = string[i];
-        string[i] = string[len - i - 1];
-        string[len - i - 1] = temporary;
-    }
+    int summary = 0;
+    for (int i = 0; i < m; i++)
+        summary += pow((strchr(digits, T[i]) - digits), m);
+    return summary;
 }
 
 int main()
 {
     int m = 0, b = 0;
     scanf("%d %d", &m, &b);
+    if (m <= 0 || b <= 0)
+        return 1;
     int flag = 0;
-    if (b == 10)
+    int decimal, summary;
+    char T[m + 1];
+    char S[m + 1];
+    for (int i = 0; i < m; i++)
     {
-        for (int i = 0; i <= 1000000; i++)
-        {
-            int original = i;
-            int result = 0;
-            int index = 0;
-            int rem = 0;
-            while (original > 0)
-            {
-                rem = original % 10;
-                original /= 10;
-                result += pow(rem, m);
-                index += 1;
-            }
-            if (result == i && index == m)
-            {
-                printf("%d ", i);
-                flag = 1;
-            }
-        }
+        T[i] = '0';
+        S[i] = '0';
     }
-    else
+    T[m] = '\0';
+    S[m] = '\0';
+    while (1)
     {
-        for (int i = 0; i <= 1000000; i++)
+        decimal = convert_to_dec(T, b);
+        summary = narcisstic_number(T, m);
+        if (decimal == summary && T[0] != '0')
         {
-            char T[m + 1];
-            int j = 0;
-            int index = 0;
-            int original = i;
-            int copy = i;
-            long int result = 0;
-            while (original > 0)
-            {
-                copy = original % b;
-                result += pow(copy, m);
-                T[j++] = value(copy);
-                original /= b;
-                index += 1;
-            }
-            reverse(T);
-            T[j] = '\0';
-            if (result == i && index == m)
-            {
-                printf("%s ", T);
-                flag = 1;
-            }
+            printf("%s ", T);
+            flag = 1;
         }
+        for (int j = m - 1; j > -1; j--)
+        {
+            if (T[j] != digits[b - 1])
+            {
+                int k = strchr(digits, T[j]) - digits + 1;
+                T[j] = digits[k];
+                break;
+            }
+            else
+                T[j] = digits[0];
+        }
+        if (strcmp(T, S) == 0)
+            break;
     }
     if (flag == 0)
-        printf("NO");
+        printf("NO\n");
     return 0;
 }
