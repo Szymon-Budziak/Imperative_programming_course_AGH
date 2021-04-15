@@ -51,4 +51,6 @@ int main(void)
                 }
             }
     print_solution(rows, cols, count);
+    free(rows);
+    free(cols);
 }

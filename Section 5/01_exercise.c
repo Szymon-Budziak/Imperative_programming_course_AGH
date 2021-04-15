@@ -49,11 +49,6 @@ int main()
                     if (field > max_field && flag == 1)
                     {
                         max_field = field;
-                        if (field == n * n)
-                        {
-                            printf("%d", max_field);
-                            return 0;
-                        }
                     }
                     height++;
                     max_height++;
